@@ -155,7 +155,7 @@
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_artwork">Artwork</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_sample_pattern">Sample Pattern</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_bom">BOM</a></li>
-                                <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_measurements">Measurements</a></li>
+                                <!-- <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_measurements">Measurements</a></li> -->
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_colors">Colors</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_samples">Samples</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_costing">Costing</a></li>
@@ -349,8 +349,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-bold text-gray-700 fs-8 mb-1">Special Instructions</label>
-                                            <textarea id="special_instructions_textarea" name="special_instructions" class="form-control form-control-solid border" rows="3" placeholder="Enter special instructions...">{{ old('special_instructions', $style->special_instructions) }}</textarea>
-                                            <div class="fs-9 text-muted text-end mt-1"><span id="special_counter">300</span> characters remaining</div>
+                                            <textarea id="special_instructions_textarea" name="special_instructions" class="form-control form-control-solid border" rows="4" placeholder="Enter special instructions...">{!! old('special_instructions', $style->special_instructions) !!}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -407,7 +406,8 @@
                                                                      class="w-100 h-100 object-fit-cover btn-enlarge-image" 
                                                                      alt="{{ $catName }} Image" 
                                                                      data-src="{{ asset('uploads/styles/' . $img->image_path) }}" 
-                                                                     data-type="{{ $catName }}" />
+                                                                     data-type="{{ $catName }}"
+                                                                     onerror="this.onerror=null; this.src='{{ asset('media/svg/files/blank-image.svg') }}';" />
                                                                 <div class="image-zoom-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25 opacity-0 transition-opacity pointer-events-none">
                                                                     <span class="badge bg-dark bg-opacity-75 text-white fs-9 py-1 px-1.5 rounded-pill shadow-sm">
                                                                         <i class="fa-solid fa-magnifying-glass-plus text-primary"></i>
@@ -468,9 +468,45 @@
 
     <!-- INTERACTIVE JAVASCRIPT LOGIC -->
     @push('scripts')
+    <script src="{{ asset('plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 1. Live Character Counter Logic
+            // TinyMCE Word-like Editor for Special Instructions
+            if (typeof tinymce !== 'undefined') {
+                const isDarkMode = document.documentElement.getAttribute("data-bs-theme-mode") === "dark" || 
+                                   document.documentElement.getAttribute("data-bs-theme") === "dark";
+
+                tinymce.init({
+                    selector: '#special_instructions_textarea',
+                    menubar: false,
+                    height: 220,
+                    branding: false,
+                    elementpath: false,
+                    skin_url: isDarkMode 
+                        ? "{{ asset('plugins/custom/tinymce/skins/ui/oxide-dark') }}" 
+                        : "{{ asset('plugins/custom/tinymce/skins/ui/oxide') }}",
+                    content_css: isDarkMode 
+                        ? "{{ asset('plugins/custom/tinymce/skins/content/dark/content.css') }}" 
+                        : "{{ asset('plugins/custom/tinymce/skins/content/default/content.css') }}",
+                    toolbar: [
+                        'undo redo | fontselect fontsizeselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | removeformat'
+                    ],
+                    font_formats: 'Inter=Inter,sans-serif; Arial=arial,helvetica,sans-serif; Calibri=calibri,candara,segoe,segoe ui,optima,arial,sans-serif; Courier New=courier new,courier,monospace; Georgia=georgia,palatino; Tahoma=tahoma,arial,helvetica,sans-serif; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva',
+                    fontsize_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt',
+                    content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 13px; color: ' + (isDarkMode ? '#cdcdde' : '#181C32') + '; line-height: 1.5; padding: 10px; }',
+                    setup: function (editor) {
+                        editor.on('change keyup', function () {
+                            editor.save();
+                        });
+                    }
+                });
+
+                $('form').on('submit', function () {
+                    tinymce.triggerSave();
+                });
+            }
+
+            // 1. Live Character Counter Logic for Packing Instructions
             const packingTextarea = document.getElementById('packing_instructions_textarea');
             const packingCounter = document.getElementById('packing_counter');
             if (packingTextarea && packingCounter) {
@@ -480,17 +516,6 @@
                 };
                 packingTextarea.addEventListener('input', updatePackingCounter);
                 updatePackingCounter();
-            }
-
-            const specialTextarea = document.getElementById('special_instructions_textarea');
-            const specialCounter = document.getElementById('special_counter');
-            if (specialTextarea && specialCounter) {
-                const updateSpecialCounter = () => {
-                    const remaining = Math.max(0, 300 - specialTextarea.value.length);
-                    specialCounter.textContent = remaining;
-                };
-                specialTextarea.addEventListener('input', updateSpecialCounter);
-                updateSpecialCounter();
             }
 
             // 2. Interactive Tag Pills Logic

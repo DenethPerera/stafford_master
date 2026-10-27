@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/{style}/construction', [StyleController::class, 'updateConstruction'])->name('update-construction');
         Route::patch('/{style}/treatment', [StyleController::class, 'updateTreatment'])->name('update-treatment');
         Route::patch('/{style}/season', [StyleController::class, 'updateSeason'])->name('update-season');
+        Route::patch('/{style}/special-instructions', [StyleController::class, 'updateSpecialInstructions'])->name('update-special-instructions');
 
         // Sub-resource AJAX endpoints for 10 PLM Workspace Tabs
         Route::put('/{style}/tech-pack', [StyleController::class, 'updateTechPack'])->name('tech-pack.update');

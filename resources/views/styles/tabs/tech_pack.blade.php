@@ -174,7 +174,10 @@
             <h5 class="fw-bold text-gray-700 fs-7 text-uppercase mb-3">TECHNICAL VECTOR SKETCH</h5>
             <div class="bg-light rounded p-4 border d-flex align-items-center justify-content-center" style="min-height: 210px;">
                 @if($primaryImg = $style->images->first())
-                    <img src="{{ asset('uploads/styles/' . $primaryImg->image_path) }}" alt="Technical Vector" class="img-fluid max-h-200px rounded shadow-xs">
+                    <img src="{{ asset('uploads/styles/' . $primaryImg->image_path) }}" 
+                         alt="Technical Vector" 
+                         class="img-fluid max-h-200px rounded shadow-xs"
+                         onerror="this.onerror=null; this.src='{{ asset('media/svg/files/blank-image.svg') }}';">
                 @else
                     <svg width="180" height="190" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M60 40 Q100 20 140 40 L170 80 L145 90 L140 170 L60 170 L55 90 L30 80 Z" stroke="#334155" stroke-width="2.5" fill="none"/>

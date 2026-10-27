@@ -137,7 +137,11 @@
                             <div class="border rounded p-4 bg-light text-center d-flex align-items-center justify-content-center" style="min-height: 240px;">
                                 @if(!empty($art->artwork_file) && in_array(strtolower(pathinfo($art->artwork_file, PATHINFO_EXTENSION)), ['png', 'jpg', 'jpeg', 'svg', 'webp', 'gif']))
                                     <div class="p-3 bg-white rounded shadow-sm border w-100">
-                                        <img src="{{ asset('uploads/styles/artworks/' . $art->artwork_file) }}" alt="{{ $art->artwork_name }}" class="img-fluid rounded" style="max-height: 280px; object-fit: contain;">
+                                        <img src="{{ asset('uploads/styles/artworks/' . $art->artwork_file) }}" 
+                                             alt="{{ $art->artwork_name }}" 
+                                             class="img-fluid rounded" 
+                                             style="max-height: 280px; object-fit: contain;"
+                                             onerror="this.onerror=null; this.src='{{ asset('media/svg/files/blank-image.svg') }}';">
                                         <div class="fw-bold text-gray-700 fs-8 tracking-widest mt-2">{{ $art->artwork_name }} • {{ $art->artwork_code ?: 'N/A' }}</div>
                                     </div>
                                 @else

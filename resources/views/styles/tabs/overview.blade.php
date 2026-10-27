@@ -101,6 +101,30 @@
                         </span>
                     </div>
                     @endif
+
+                    <!-- Special Instructions Word-like Editor Box -->
+                    <div class="col-12 border-top pt-4 mt-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                            <div>
+                                <label class="form-label fw-bold text-gray-800 fs-7 mb-0 text-uppercase d-flex align-items-center">
+                                    <i class="fa-solid fa-file-signature text-primary me-2"></i> Special Instructions
+                                </label>
+                                <span class="text-muted fs-8">Word-like rich formatting (fonts, size, bold, italic, underline, text & highlight colors)</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <span id="instructions_save_spinner" class="spinner-border spinner-border-sm text-primary d-none" role="status"></span>
+                                <span id="instructions_save_badge" class="badge badge-light-success fs-9 d-none">
+                                    <i class="fa-solid fa-check text-success me-1"></i>Saved
+                                </span>
+                                <button type="button" id="btn_save_special_instructions" class="btn btn-sm btn-primary fw-bold px-3 py-1 fs-8 shadow-xs">
+                                    <i class="fa-solid fa-floppy-disk me-1"></i> Save Instructions
+                                </button>
+                            </div>
+                        </div>
+                        <div class="border rounded bg-white overflow-hidden shadow-xs">
+                            <textarea id="overview_special_instructions" name="special_instructions" class="form-control" rows="8">{!! old('special_instructions', $style->special_instructions) !!}</textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -156,7 +180,12 @@
                                     @foreach($tabInfo['items'] as $img)
                                         <div class="col-6 col-sm-4 image-card-wrapper" id="image_card_{{ $img->id }}">
                                             <div class="position-relative border rounded overflow-hidden shadow-xs bg-light style-image-card" style="cursor: zoom-in;" title="Click to view large">
-                                                <img src="{{ asset('uploads/styles/' . $img->image_path) }}" alt="{{ $img->image_type }}" class="w-100 h-115px object-fit-cover btn-enlarge-image" data-src="{{ asset('uploads/styles/' . $img->image_path) }}" data-type="{{ $img->image_type }}">
+                                                <img src="{{ asset('uploads/styles/' . $img->image_path) }}" 
+                                                     alt="{{ $img->image_type }}" 
+                                                     class="w-100 h-115px object-fit-cover btn-enlarge-image" 
+                                                     data-src="{{ asset('uploads/styles/' . $img->image_path) }}" 
+                                                     data-type="{{ $img->image_type }}"
+                                                     onerror="this.onerror=null; this.src='{{ asset('media/svg/files/blank-image.svg') }}';">
                                                 <div class="image-zoom-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25 opacity-0 transition-opacity pointer-events-none">
                                                     <span class="badge bg-dark bg-opacity-75 text-white fs-9 py-1 px-1.5 rounded-pill shadow-sm">
                                                         <i class="fa-solid fa-magnifying-glass-plus text-primary"></i>
@@ -236,8 +265,102 @@
 </div>
 
 @push('scripts')
+<script src="{{ asset('plugins/custom/tinymce/tinymce.bundle.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize TinyMCE Word-like Editor for Special Instructions
+        function initSpecialInstructionsEditor() {
+            if (typeof tinymce === 'undefined') return;
+
+            if (tinymce.get('overview_special_instructions')) {
+                tinymce.get('overview_special_instructions').remove();
+            }
+
+            const isDarkMode = document.documentElement.getAttribute("data-bs-theme-mode") === "dark" || 
+                               document.documentElement.getAttribute("data-bs-theme") === "dark";
+
+            tinymce.init({
+                selector: '#overview_special_instructions',
+                menubar: false,
+                height: 250,
+                branding: false,
+                elementpath: false,
+                skin_url: isDarkMode 
+                    ? "{{ asset('plugins/custom/tinymce/skins/ui/oxide-dark') }}" 
+                    : "{{ asset('plugins/custom/tinymce/skins/ui/oxide') }}",
+                content_css: isDarkMode 
+                    ? "{{ asset('plugins/custom/tinymce/skins/content/dark/content.css') }}" 
+                    : "{{ asset('plugins/custom/tinymce/skins/content/default/content.css') }}",
+                toolbar: [
+                    'undo redo | fontselect fontsizeselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat'
+                ],
+                font_formats: 'Inter=Inter,sans-serif; Arial=arial,helvetica,sans-serif; Calibri=calibri,candara,segoe,segoe ui,optima,arial,sans-serif; Courier New=courier new,courier,monospace; Georgia=georgia,palatino; Tahoma=tahoma,arial,helvetica,sans-serif; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva',
+                fontsize_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 36pt',
+                content_style: 'body { font-family: Inter, Arial, sans-serif; font-size: 13px; color: ' + (isDarkMode ? '#cdcdde' : '#181C32') + '; line-height: 1.5; padding: 10px; }',
+                setup: function (editor) {
+                    editor.on('change keyup', function () {
+                        editor.save();
+                    });
+                }
+            });
+        }
+
+        initSpecialInstructionsEditor();
+
+        // Save Special Instructions AJAX handler
+        $('#btn_save_special_instructions').on('click', function (e) {
+            e.preventDefault();
+            const btn = $(this);
+            const spinner = $('#instructions_save_spinner');
+            const badge = $('#instructions_save_badge');
+
+            let content = '';
+            if (typeof tinymce !== 'undefined' && tinymce.get('overview_special_instructions')) {
+                content = tinymce.get('overview_special_instructions').getContent();
+            } else {
+                content = $('#overview_special_instructions').val();
+            }
+
+            btn.prop('disabled', true);
+            spinner.removeClass('d-none');
+            badge.addClass('d-none');
+
+            $.ajax({
+                url: "{{ route('styles.update-special-instructions', $style->id) }}",
+                type: 'PATCH',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    special_instructions: content
+                },
+                dataType: 'json',
+                success: function (res) {
+                    btn.prop('disabled', false);
+                    spinner.addClass('d-none');
+                    badge.removeClass('d-none');
+                    setTimeout(() => { badge.addClass('d-none'); }, 3000);
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Saved!',
+                            text: res.message || 'Special instructions saved successfully.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    btn.prop('disabled', false);
+                    spinner.addClass('d-none');
+                    const msg = xhr.responseJSON?.message || 'Failed to save special instructions.';
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire('Error', msg, 'error');
+                    } else {
+                        alert(msg);
+                    }
+                }
+            });
+        });
+
         $('#overview_season_select').on('change', function () {
             const val = $(this).val();
             const spinner = $('#season_save_spinner');
