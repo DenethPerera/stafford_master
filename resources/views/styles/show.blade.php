@@ -650,7 +650,7 @@
                 $('#s_qc_report').val('');
                 if (s.qc_report) {
                     $('#s_qc_report_name').text(s.qc_report);
-                    $('#s_qc_report_view_btn').attr('href', '/uploads/styles/samples/qc/' + s.qc_report);
+                    $('#s_qc_report_view_btn').attr('href', "{{ asset('uploads/styles/samples/qc') }}/" + s.qc_report);
                     $('#s_qc_report_preview_box').removeClass('d-none');
                 } else {
                     $('#s_qc_report_preview_box').addClass('d-none');
@@ -659,7 +659,7 @@
                 $('#s_cost_sheet').val('');
                 if (s.cost_sheet) {
                     $('#s_cost_sheet_name').text(s.cost_sheet);
-                    $('#s_cost_sheet_view_btn').attr('href', '/uploads/styles/samples/cost/' + s.cost_sheet);
+                    $('#s_cost_sheet_view_btn').attr('href', "{{ asset('uploads/styles/samples/cost') }}/" + s.cost_sheet);
                     $('#s_cost_sheet_preview_box').removeClass('d-none');
                 } else {
                     $('#s_cost_sheet_preview_box').addClass('d-none');
@@ -668,7 +668,7 @@
                 $('#s_comment_sheet').val('');
                 if (s.comment_sheet) {
                     $('#s_comment_sheet_name').text(s.comment_sheet);
-                    $('#s_comment_sheet_view_btn').attr('href', '/uploads/styles/samples/comments/' + s.comment_sheet);
+                    $('#s_comment_sheet_view_btn').attr('href', "{{ asset('uploads/styles/samples/comments') }}/" + s.comment_sheet);
                     $('#s_comment_sheet_preview_box').removeClass('d-none');
                 } else {
                     $('#s_comment_sheet_preview_box').addClass('d-none');
@@ -725,7 +725,7 @@
 
                 // QC Report card
                 if (s.qc_report) {
-                    var qcUrl = '/uploads/styles/samples/qc/' + s.qc_report;
+                    var qcUrl = "{{ asset('uploads/styles/samples/qc') }}/" + s.qc_report;
                     $('#v_qc_filename').text(s.qc_report);
                     $('#v_qc_view_btn').attr('href', qcUrl);
                     $('#v_qc_download_btn').attr('href', qcUrl);
@@ -739,7 +739,7 @@
 
                 // Cost Sheet card
                 if (s.cost_sheet) {
-                    var costUrl = '/uploads/styles/samples/cost/' + s.cost_sheet;
+                    var costUrl = "{{ asset('uploads/styles/samples/cost') }}/" + s.cost_sheet;
                     $('#v_cost_filename').text(s.cost_sheet);
                     $('#v_cost_view_btn').attr('href', costUrl);
                     $('#v_cost_download_btn').attr('href', costUrl);
@@ -753,7 +753,7 @@
 
                 // Comment Sheet card
                 if (s.comment_sheet) {
-                    var commentUrl = '/uploads/styles/samples/comments/' + s.comment_sheet;
+                    var commentUrl = "{{ asset('uploads/styles/samples/comments') }}/" + s.comment_sheet;
                     $('#v_comment_filename').text(s.comment_sheet);
                     $('#v_comment_view_btn').attr('href', commentUrl);
                     $('#v_comment_download_btn').attr('href', commentUrl);

@@ -266,7 +266,7 @@ class StyleController extends Controller
             // Handle Categorized Style Images upload
             $destinationPath = public_path('uploads/styles');
             if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
+                @mkdir($destinationPath, 0775, true);
             }
 
             $types = ['Front', 'Back', 'Details', 'Colorways'];
@@ -274,8 +274,10 @@ class StyleController extends Controller
                 foreach ($types as $type) {
                     if ($request->hasFile("images.{$type}")) {
                         foreach ($request->file("images.{$type}") as $image) {
-                            $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                            $ext = strtolower($image->getClientOriginalExtension() ?: 'png');
+                            $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $ext;
                             $image->move($destinationPath, $filename);
+                            @chmod($destinationPath . DIRECTORY_SEPARATOR . $filename, 0644);
 
                             StyleImage::create([
                                 'style_id'   => $style->id,
@@ -293,8 +295,10 @@ class StyleController extends Controller
             if ($request->hasFile('style_images')) {
                 $index = $style->images()->count();
                 foreach ($request->file('style_images') as $image) {
-                    $filename = 'style_' . $style->id . '_' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $ext = strtolower($image->getClientOriginalExtension() ?: 'png');
+                    $filename = 'style_' . $style->id . '_' . time() . '_' . uniqid() . '.' . $ext;
                     $image->move($destinationPath, $filename);
+                    @chmod($destinationPath . DIRECTORY_SEPARATOR . $filename, 0644);
 
                     StyleImage::create([
                         'style_id'   => $style->id,
@@ -694,7 +698,7 @@ class StyleController extends Controller
             // Handle Categorized Style Images upload
             $destinationPath = public_path('uploads/styles');
             if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
+                @mkdir($destinationPath, 0775, true);
             }
 
             $types = ['Front', 'Back', 'Details', 'Colorways'];
@@ -702,8 +706,10 @@ class StyleController extends Controller
                 foreach ($types as $type) {
                     if ($request->hasFile("images.{$type}")) {
                         foreach ($request->file("images.{$type}") as $image) {
-                            $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                            $ext = strtolower($image->getClientOriginalExtension() ?: 'png');
+                            $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $ext;
                             $image->move($destinationPath, $filename);
+                            @chmod($destinationPath . DIRECTORY_SEPARATOR . $filename, 0644);
 
                             StyleImage::create([
                                 'style_id'   => $style->id,
@@ -721,8 +727,10 @@ class StyleController extends Controller
             if ($request->hasFile('style_images')) {
                 $index = $style->images()->count();
                 foreach ($request->file('style_images') as $image) {
-                    $filename = 'style_' . $style->id . '_' . time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $ext = strtolower($image->getClientOriginalExtension() ?: 'png');
+                    $filename = 'style_' . $style->id . '_' . time() . '_' . uniqid() . '.' . $ext;
                     $image->move($destinationPath, $filename);
+                    @chmod($destinationPath . DIRECTORY_SEPARATOR . $filename, 0644);
 
                     StyleImage::create([
                         'style_id'   => $style->id,
@@ -941,6 +949,38 @@ class StyleController extends Controller
         }
 
         return back()->with('success', 'Style season updated successfully.');
+    }
+
+    /**
+     * Update Style Special Instructions (from Overview tab Word-like rich text editor).
+     */
+    public function updateSpecialInstructions(Request $request, Style $style): JsonResponse|RedirectResponse
+    {
+        $validated = $request->validate([
+            'special_instructions' => 'nullable|string',
+        ]);
+
+        $style->update([
+            'special_instructions' => $validated['special_instructions'] ?? null,
+            'updated_by'           => auth()->id(),
+        ]);
+
+        if (function_exists('activity')) {
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($style)
+                ->log("Updated special instructions for style {$style->style_no}");
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success'              => true,
+                'message'              => 'Special instructions saved successfully.',
+                'special_instructions' => $style->special_instructions,
+            ]);
+        }
+
+        return back()->with('success', 'Special instructions saved successfully.');
     }
 
     /**
@@ -2022,13 +2062,33 @@ class StyleController extends Controller
 
         $destinationPath = public_path('uploads/styles');
         if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0755, true);
+            @mkdir($destinationPath, 0775, true);
+        }
+
+        if (!is_writable($destinationPath)) {
+            @chmod($destinationPath, 0775);
+            if (!is_writable($destinationPath)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Upload directory (public/uploads/styles) is not writable on the server. Please check folder permissions.',
+                ], 500);
+            }
         }
 
         $file = $request->file('image');
         $type = $request->image_type;
-        $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->move($destinationPath, $filename);
+        $extension = strtolower($file->getClientOriginalExtension() ?: 'png');
+        $filename = 'style_' . $style->id . '_' . strtolower($type) . '_' . time() . '_' . uniqid() . '.' . $extension;
+
+        try {
+            $file->move($destinationPath, $filename);
+            @chmod($destinationPath . DIRECTORY_SEPARATOR . $filename, 0644);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to write uploaded image to disk: ' . $e->getMessage(),
+            ], 500);
+        }
 
         $styleImage = StyleImage::create([
             'style_id'   => $style->id,
