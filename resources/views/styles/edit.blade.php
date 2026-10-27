@@ -155,7 +155,7 @@
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_artwork">Artwork</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_sample_pattern">Sample Pattern</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_bom">BOM</a></li>
-                                <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_measurements">Measurements</a></li>
+                                <!-- <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_measurements">Measurements</a></li> -->
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_colors">Colors</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_samples">Samples</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-600 py-3" href="{{ route('styles.show', $style->id) }}#tab_costing">Costing</a></li>

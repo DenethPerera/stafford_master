@@ -153,7 +153,7 @@
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Artwork</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Sample Pattern</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">BOM</a></li>
-                                <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Measurements</a></li>
+                                <!-- <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Measurements</a></li> -->
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Colors</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Samples</a></li>
                                 <li class="nav-item"><a class="nav-link text-gray-500 py-3 disabled" href="#">Costing</a></li>

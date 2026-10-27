@@ -139,10 +139,25 @@
 
                 <div class="modal-body p-4 fs-7">
                     <div class="row g-4">
+                        <!-- Colorway type: default to the existing Pantone workflow -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-gray-800 mb-2">Color Reference Type</label>
+                            <div class="d-flex flex-wrap gap-4 p-3 bg-light rounded border">
+                                <div class="form-check form-check-custom form-check-sm">
+                                    <input class="form-check-input" type="radio" name="color_reference_type" id="c_type_pantone" value="pantone" checked>
+                                    <label class="form-check-label fw-semibold" for="c_type_pantone">Pantone Color</label>
+                                </div>
+                                <div class="form-check form-check-custom form-check-sm">
+                                    <input class="form-check-input" type="radio" name="color_reference_type" id="c_type_custom" value="non_pantone">
+                                    <label class="form-check-label fw-semibold" for="c_type_custom">Non-Pantone Color</label>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Left Column: Pantone & Color Inputs -->
                         <div class="col-lg-7 border-end-lg pe-lg-4">
                             <!-- Pantone Code Field (Primary Input) -->
-                            <div class="mb-3">
+                            <div id="c_pantone_section" class="mb-3">
                                 <label class="form-label fw-bold text-gray-800 d-flex justify-content-between align-items-center">
                                     <span><i class="fa-solid fa-swatchbook me-1 text-primary"></i> Pantone Color Code</span>
                                     <span class="badge badge-light-primary fs-9 fw-normal">Auto-Fetch Color & Swatch</span>
@@ -161,6 +176,20 @@
                                 </datalist>
                                 <div id="pantone_status_msg" class="form-text fs-9 mt-1">
                                     Type standard Pantone TCX/TPG or PMS numbers to auto-detect swatch hex & color name.
+                                </div>
+                            </div>
+
+                            <!-- Alternative workflow: choose a color manually, without a Pantone number -->
+                            <div id="c_custom_section" class="mb-3 d-none">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-droplet text-primary"></i>
+                                    <span class="fw-bold text-gray-800">Custom / Supplier Color</span>
+                                    <span class="badge badge-light-info fs-9 fw-normal">Manual Color Selection</span>
+                                </div>
+                                <div class="p-3 bg-light rounded border border-dashed fs-8 text-gray-700">
+                                    Enter your own color name and choose a swatch using the color picker or HEX field below.
+                                    You can use the Lab Dip Ref to record your supplier's matching reference.
+                                    No Pantone code is required.
                                 </div>
                             </div>
 
@@ -223,6 +252,9 @@
                                             <span class="badge bg-light text-dark border fs-9 fw-semibold" id="c_preview_pantone_badge">
                                                 <i class="fa-solid fa-palette text-primary me-1"></i> <span id="c_preview_pantone">PANTONE 19-4052 TCX</span>
                                             </span>
+                                            <span id="c_preview_custom_badge" class="badge bg-light text-dark border fs-9 fw-semibold d-none">
+                                                <i class="fa-solid fa-droplet text-primary me-1"></i> Custom / Non-Pantone
+                                            </span>
                                         </div>
                                         <div class="text-muted fs-8 mb-2" id="c_preview_lab_wrap">
                                             Ref: <span id="c_preview_lab">LD-001</span>
@@ -235,11 +267,15 @@
                                 </div>
                             </div>
 
-                            <div class="alert alert-dismissible bg-light-primary border border-primary border-dashed d-flex align-items-center p-2 mt-3 mb-0 rounded">
+                            <div id="c_pantone_help" class="alert alert-dismissible bg-light-primary border border-primary border-dashed d-flex align-items-center p-2 mt-3 mb-0 rounded">
                                 <i class="fa-solid fa-circle-info fs-6 text-primary me-2 ms-1"></i>
                                 <div class="fs-9 text-gray-700">
                                     Pantone codes standardise fabric dye matching across suppliers & factories.
                                 </div>
+                            </div>
+                            <div id="c_custom_help" class="alert bg-light-info border border-info border-dashed d-none align-items-center p-2 mt-3 mb-0 rounded">
+                                <i class="fa-solid fa-circle-info fs-6 text-info me-2 ms-1"></i>
+                                <div class="fs-9 text-gray-700">Custom colors use the selected HEX swatch and optional Lab Dip Ref for supplier matching.</div>
                             </div>
                         </div>
                     </div>

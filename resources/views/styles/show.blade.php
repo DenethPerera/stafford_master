@@ -85,7 +85,7 @@
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_artwork">Artwork</a></li>
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_sample_pattern">Sample Pattern</a></li>
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_bom">BOM</a></li>
-                            <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_measurements">Measurements</a></li>
+                            <!-- <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_measurements">Measurements</a></li> -->
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_colors">Colors</a></li>
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_samples">Samples</a></li>
                             <li class="nav-item"><a class="nav-link text-active-primary py-4" data-bs-toggle="tab" href="#tab_costing">Costing</a></li>
@@ -102,7 +102,7 @@
                     <div class="tab-pane fade" id="tab_artwork">@include('styles.tabs.artwork')</div>
                     <div class="tab-pane fade" id="tab_sample_pattern">@include('styles.tabs.sample_pattern')</div>
                     <div class="tab-pane fade" id="tab_bom">@include('styles.tabs.bom')</div>
-                    <div class="tab-pane fade" id="tab_measurements">@include('styles.tabs.measurements')</div>
+                    <!-- <div class="tab-pane fade" id="tab_measurements">@include('styles.tabs.measurements')</div> -->
                     <div class="tab-pane fade" id="tab_colors">@include('styles.tabs.colors')</div>
                     <div class="tab-pane fade" id="tab_samples">@include('styles.tabs.samples')</div>
                     <div class="tab-pane fade" id="tab_costing">@include('styles.tabs.costing')</div>
@@ -1195,6 +1195,58 @@
                 }
             });
         });
+
+        // Scoped behavior for the Add / Edit Colorway reference-type selector
+        const modal = document.getElementById('addColorwayModal');
+
+        if (modal) {
+            const pantoneRadio = document.getElementById('c_type_pantone');
+            const customRadio = document.getElementById('c_type_custom');
+            const pantoneField = document.getElementById('c_pantone');
+            const pantoneSection = document.getElementById('c_pantone_section');
+            const customSection = document.getElementById('c_custom_section');
+            const pantoneBadge = document.getElementById('c_preview_pantone_badge');
+            const customBadge = document.getElementById('c_preview_custom_badge');
+            const pantoneHelp = document.getElementById('c_pantone_help');
+            const customHelp = document.getElementById('c_custom_help');
+
+            let previousPantone = '';
+
+            function syncReferenceType() {
+                const isCustom = customRadio.checked;
+
+                if (isCustom) {
+                    if (!pantoneField.disabled) previousPantone = pantoneField.value;
+
+                    pantoneField.value = '';
+                    pantoneField.disabled = true; // Do not submit a Pantone reference for a custom color.
+                } else {
+                    pantoneField.disabled = false;
+
+                    if (!pantoneField.value && previousPantone) pantoneField.value = previousPantone;
+                }
+
+                pantoneSection.classList.toggle('d-none', isCustom);
+                customSection.classList.toggle('d-none', !isCustom);
+                pantoneBadge.classList.toggle('d-none', isCustom);
+                customBadge.classList.toggle('d-none', !isCustom);
+                pantoneHelp.classList.toggle('d-none', isCustom);
+                customHelp.classList.toggle('d-none', !isCustom);
+                customHelp.classList.toggle('d-flex', isCustom);
+            }
+
+            pantoneRadio.addEventListener('change', syncReferenceType);
+            customRadio.addEventListener('change', syncReferenceType);
+
+            // Each new opening defaults to Pantone, while preserving the existing inputs and preview logic.
+            modal.addEventListener('hidden.bs.modal', function () {
+                pantoneRadio.checked = true;
+                previousPantone = '';
+                syncReferenceType();
+            });
+
+            syncReferenceType();
+        }
     </script>
     @endpush
 </x-layouts.app>
