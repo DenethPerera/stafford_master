@@ -1,0 +1,21 @@
+/* Custom Modals and Form Feedback */
+
+.modal-content-custom {
+    border-radius: 0.5rem;
+    border: none;
+}
+
+.modal-header-custom {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invalid-feedback-custom {
+    font-size: 0.75rem;
+    color: #dc3545;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}

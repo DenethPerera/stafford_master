@@ -1,0 +1,23 @@
+/* custom table css */
+
+.table-td-custom {
+    padding: 0.75rem 0.75rem; /* px-3 py-3 */
+    font-size: 14px;
+    color: #475569; /* text-slate-600 */
+    border: 1px solid #f1f5f9; /* border-slate-100 */
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.table-tr-hover:hover {
+    background-color: rgba(248, 250, 252, 0.8); /* slate-50/80 */
+    transition: background-color 0.2s ease;
+}
+
+/* Table Head Styling */
+.table thead th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    background-color: #f8f9fa;
+}

@@ -1,0 +1,255 @@
+/* Custom Badges */
+
+.badge-status {
+    padding: 0.5em 0.8em;
+    border-radius: 50rem;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+/* Status Pill */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.status-pill--draft {
+    background: #f1f5f9;
+    color: #334155;
+    border-color: #e2e8f0;
+}
+.status-pill--submitted {
+    background: #ffedd5;
+    color: #c2410c;
+    border-color: #fed7aa;
+}
+.status-pill--pending {
+    background: #ffedd5;
+    color: #c2410c;
+    border-color: #fed7aa;
+}
+.status-pill--approved {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+.status-pill--rejected {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.status-pill i {
+    font-size: 0.5625rem;
+}
+
+/* Item Status Badges */
+.badge-status-item {
+    font-size: 8px;
+    padding: 0.2rem 0.4rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Variation Order Pill */
+.badge-vo-applied {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+    border-radius: 50rem;
+}
+
+/* Omit Badge */
+.omit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 9999px;
+    border: 1px solid #fecaca;
+    text-decoration: none !important;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Omitted Badge */
+.omitted-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.mm-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .72rem;
+    font-weight: 600;
+    padding: .25rem .65rem;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all .15s;
+    border: 1px solid transparent;
+}
+
+.mm-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* ==========================================
+   Success (Green)
+========================================== */
+
+.mm-status-active,
+.mm-status-completed,
+.mm-status-approved {
+    background: rgba(16,185,129,.10);
+    color: #047857;
+    border-color: rgba(16,185,129,.25);
+}
+
+.mm-status-active:hover,
+.mm-status-completed:hover,
+.mm-status-approved:hover {
+    background: rgba(16,185,129,.20);
+}
+
+.mm-status-active .mm-status-dot,
+.mm-status-completed .mm-status-dot,
+.mm-status-approved .mm-status-dot {
+    background: #10b981;
+}
+
+/* ==========================================
+   Danger (Red)
+========================================== */
+
+.mm-status-inactive,
+.mm-status-cancelled,
+.mm-status-failed {
+    background: rgba(239,68,68,.10);
+    color: #b91c1c;
+    border-color: rgba(239,68,68,.25);
+}
+
+.mm-status-inactive:hover,
+.mm-status-cancelled:hover,
+.mm-status-failed:hover {
+    background: rgba(239,68,68,.20);
+}
+
+.mm-status-inactive .mm-status-dot,
+.mm-status-cancelled .mm-status-dot,
+.mm-status-failed .mm-status-dot {
+    background: #ef4444;
+}
+
+/* ==========================================
+   Warning (Amber)
+========================================== */
+
+.mm-status-pending,
+.mm-status-draft,
+.mm-status-processing,
+.mm-status-review {
+    background: rgba(245,158,11,.10);
+    color: #b45309;
+    border-color: rgba(245,158,11,.25);
+}
+
+.mm-status-pending:hover,
+.mm-status-draft:hover,
+.mm-status-processing:hover,
+.mm-status-review:hover {
+    background: rgba(245,158,11,.20);
+}
+
+.mm-status-pending .mm-status-dot,
+.mm-status-draft .mm-status-dot,
+.mm-status-processing .mm-status-dot,
+.mm-status-review .mm-status-dot {
+    background: #f59e0b;
+}
+
+/* ==========================================
+   Default (Slate)
+========================================== */
+
+.mm-status-default {
+    background: rgba(148,163,184,.10);
+    color: var(--mm-slate);
+    border-color: rgba(148,163,184,.25);
+}
+
+.mm-status-default:hover {
+    background: rgba(148,163,184,.20);
+}
+
+.mm-status-default .mm-status-dot {
+    background: var(--mm-slate);
+}
+
+/* ==========================================
+   BOQ Drafted (Blue)
+========================================== */
+
+.mm-status-boq-drafted {
+    background: rgba(59,130,246,.10);
+    color: #1d4ed8;
+    border-color: rgba(59,130,246,.25);
+}
+
+.mm-status-boq-drafted:hover {
+    background: rgba(59,130,246,.20);
+}
+
+.mm-status-boq-drafted .mm-status-dot {
+    background: #3b82f6;
+}
+
+/* ==========================================
+   Converted (Purple)
+========================================== */
+
+.mm-status-converted {
+    background: rgba(139,92,246,.10);
+    color: #6d28d9;
+    border-color: rgba(139,92,246,.25);
+}
+
+.mm-status-converted:hover {
+    background: rgba(139,92,246,.20);
+}
+
+.mm-status-converted .mm-status-dot {
+    background: #8b5cf6;
+}
