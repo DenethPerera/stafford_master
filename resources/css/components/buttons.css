@@ -1,0 +1,62 @@
+/* Custom Buttons */
+
+.btn-brand-orange {
+    background-color: #fe7f2d;
+    color: white;
+    border: none;
+    transition: opacity 0.2s;
+}
+.btn-brand-orange:hover {
+    background-color: #e66a1f;
+    color: white;
+}
+
+.btn-view {
+    background-color: #1c4d8d;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+.btn-view:hover {
+    background-color: #0d3463;
+    color: white;
+}
+
+/* Export Buttons */
+.btn-export {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    border: none;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-csv {
+    background-color: #28a745;
+}
+.btn-csv:hover {
+    background-color: #218838;
+    color: #fff;
+}
+
+.btn-pdf {
+    background-color: #dc3545;
+}
+.btn-pdf:hover {
+    background-color: #c82333;
+    color: #fff;
+}
+
+.btn-print {
+    background-color: #17a2b8;
+}
+.btn-print:hover {
+    background-color: #138496;
+    color: #fff;
+}
